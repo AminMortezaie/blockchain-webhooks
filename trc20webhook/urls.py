@@ -1,10 +1,9 @@
 from django.contrib import admin
 from django.urls import path
-from trc20webhook import views
+from trc20webhook.views import TransactionHistoryView
 
 
 urlpatterns = [
-    path('coin/', views.ReceiveConfirmedCoinTransaction.as_view()),
-    path('token/', views.ReceiveConfirmedTokenTransaction.as_view())
+    path('', TransactionHistoryView.as_view()),
 ]
 

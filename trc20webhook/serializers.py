@@ -8,7 +8,6 @@ class TransactionHistorySerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
-class RegisterWalletSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = RegisteredWallets
-        fields = '__all__'
+class RegisterWalletSerializer(serializers.Serializer):
+    wallet = serializers.CharField()
+    network = serializers.CharField()

@@ -21,7 +21,13 @@ class RegisterWalletView(APIView):
     queryset = RegisteredWallets.objects.all()
     serializer_class = RegisterWalletSerializer
 
-    def post(self, wallet, network):
+    def post(self, request):
+        serializer = RegisterWalletSerializer(data=self.request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer_data = serializer.validated_data
+        wallet = serializer_data['wallet']
+        network = serializer_data['network']
+
         status_, message = register_wallet(network=network, wallet=wallet)
         return Response({
             'message': message

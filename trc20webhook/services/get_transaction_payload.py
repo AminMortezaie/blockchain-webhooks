@@ -30,12 +30,10 @@ def filter_payload(request: dict):
     network = set_network_name(request.data.get('data').get('item').get('blockchain'))
     tx_type = request.data.get('data').get('item').get('direction')
     amount = request.data.get('data').get('item').get('amount')
-    print("amount1....", amount)
     
     try:
         contract_address = request.data.get('data').get('item').get('token').get('contractAddress')
         amount = request.data.get('data').get('item').get('token').get('amount')
-        print("amount2....", amount)
         return wallet_address, tx_hash, network, tx_type, amount, contract_address
     except Exception as e:
         contract_address = ''
@@ -68,7 +66,7 @@ def generate_transaction(request: dict):
         )
 
         status_ = status.HTTP_200_OK
-        transaction = "transaction successfully gathered.."
+        transaction = "transaction successfully gathered."
 
     except Exception as e:
         transaction = str(e)

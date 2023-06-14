@@ -68,16 +68,6 @@ def check_for_registered_wallet(wallet: Wallet, network: Network):
     return True, context
 
 
-def retry_register_wallet(network_obj, context, payload, endpoint):
-    context = 'tokenTX' if context == 'coinTX' else 'coinTX'
-    endpoint = endpoint[context]
-    payload['context'] = context
-    response = get_request_response(endpoint, payload)['data']['item']
-    create_registered_wallet(response, network_obj, context)
-    return response
-
-
-
 def create_registered_wallet(response: dict, network_obj: Network, context: str):
     wallet_address = response['address']
     reference_id = response['referenceId']
@@ -94,6 +84,19 @@ def create_registered_wallet(response: dict, network_obj: Network, context: str)
         return registered_wallet
     except Exception as err:
         print(err)
+
+
+def _register_wallet(network_obj, context, payload, endpoint):
+    payload['context'] = context
+    response = get_request_response(endpoint, payload)['data']['item']
+    create_registered_wallet(response, network_obj, context)
+
+
+def retry_register_wallet(network_obj, context, payload, endpoint):
+    context = 'tokenTX' if context == 'coinTX' else 'coinTX'
+    endpoint = endpoint[context]
+    payload['context'] = context
+    _register_wallet(network_obj, context, payload, endpoint)
 
 
 def register_wallet(network: str, wallet: str):
@@ -140,11 +143,13 @@ def register_wallet(network: str, wallet: str):
         if check_validation:
             for context, endpoint in endpoints.items():
                 payload['context'] = context
-                response = get_request_response(endpoint, payload)['data']['item']
-                create_registered_wallet(response, network_obj, context)
+                _register_wallet(network_obj, context, payload, endpoint)
         elif not check_validation and context_validation:
             retry_register_wallet(network_obj=network_obj, context=context_validation,
                                   payload=payload, endpoint=endpoints)
+        else:
+            status_ = status.HTTP_400_BAD_REQUEST
+            message = 'Wallet registered before'
     except Exception as err:
         message = str(err)
         status_ = status.HTTP_417_EXPECTATION_FAILED

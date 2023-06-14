@@ -1,11 +1,21 @@
 from rest_framework import generics
+from rest_framework.views import APIView
 from rest_framework.response import Response
-from trc20webhook import models, serializers
+from trc20webhook.models import TransactionHistory, ConfirmedCoinTransaction, ConfirmedTokenTransaction
+from trc20webhook.serializers import TransactionHistorySerializer, ConfirmedCoinTransactionSerializer, ConfirmedTokenTransactionSerializer
+
+
+class TransactionHistoryView(APIView):
+    queryset = TransactionHistory.objects.all()
+    serializer_class = TransactionHistorySerializer
+
+    def post(self, request, wallet, network):
+        pass
 
 
 class ReceiveConfirmedCoinTransaction(generics.ListCreateAPIView):
-    queryset = models.ConfirmedCoinTransaction.objects.all()
-    serializer_class = serializers.ConfirmedCoinTransactionSerializer
+    queryset = ConfirmedCoinTransaction.objects.all()
+    serializer_class = ConfirmedCoinTransactionSerializer
 
     def post(self, request, *args, **kwargs):
         filtered_payload = {
@@ -25,8 +35,8 @@ class ReceiveConfirmedCoinTransaction(generics.ListCreateAPIView):
 
 
 class ReceiveConfirmedTokenTransaction(generics.ListCreateAPIView):
-    queryset = models.ConfirmedTokenTransaction.objects.all()
-    serializer_class = serializers.ConfirmedTokenTransactionSerializer
+    queryset = ConfirmedTokenTransaction.objects.all()
+    serializer_class = ConfirmedTokenTransactionSerializer
 
     def post(self, request, *args, **kwargs):
         filtered_payload = {

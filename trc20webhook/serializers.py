@@ -1,26 +1,20 @@
 from rest_framework import serializers
-from trc20webhook import models
+from trc20webhook.models import TransactionHistory, ConfirmedCoinTransaction, ConfirmedTokenTransaction
 
 
-# class BlockSerializer(serializers.ModelSerializer):
-#     class Meta:
-#         model = Block
-#         fields = '__all__'
-#
-#
-# class TokenSerializer(serializers.ModelSerializer):
-#     class Meta:
-#         model = Token
-#         fields = '__all__'
+class TransactionHistorySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = TransactionHistory
+        fields = '__all__'
 
 
 class ConfirmedCoinTransactionSerializer(serializers.ModelSerializer):
     class Meta:
-        model = models.ConfirmedCoinTransaction
+        model = ConfirmedCoinTransaction
         fields = '__all__'
 
 
 class ConfirmedTokenTransactionSerializer(serializers.ModelSerializer):
     class Meta:
-        model = models.ConfirmedTokenTransaction
+        model = ConfirmedTokenTransaction
         fields = '__all__'

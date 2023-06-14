@@ -52,6 +52,20 @@ class Coin(BaseModel):
     type = models.CharField(max_length=3, choices=TYPE_CHOICES)
 
 
+class TransactionHistory(models.Model):
+    transaction_hash = models.CharField(max_length=100)
+    amount = models.CharField(max_length=50)
+    coin = models.ForeignKey(Coin, on_delete=models.CASCADE)
+    network = models.ForeignKey(Network, on_delete=models.CASCADE)
+    wallet = models.ForeignKey(Wallet, on_delete=models.CASCADE)
+    timestamp = models.DateTimeField(default=datetime.now)
+    transaction_type = models.CharField(default="withdrawal", max_length=10)
+    created_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        db_table = 'transaction_history_{wallet_id}'
+
+
 class ConfirmedTransaction(models.Model):
     wallet_address = models.CharField(max_length=100)
     type = models.CharField(max_length=50)
@@ -71,15 +85,4 @@ class ConfirmedTokenTransaction(ConfirmedTransaction):
     decimals = models.CharField(max_length=100)
 
 
-class TransactionHistory(models.Model):
-    transaction_hash = models.CharField(max_length=100)
-    amount = models.CharField(max_length=50)
-    coin = models.ForeignKey(Coin, on_delete=models.CASCADE)
-    network = models.ForeignKey(Network, on_delete=models.CASCADE)
-    wallet = models.ForeignKey(Wallet, on_delete=models.CASCADE)
-    timestamp = models.DateTimeField(default=datetime.now)
-    transaction_type = models.CharField(default="Withdraw", max_length=10)
-    created_at = models.DateTimeField(auto_now=True)
 
-    class Meta:
-        db_table = 'transaction_history_{wallet_id}'

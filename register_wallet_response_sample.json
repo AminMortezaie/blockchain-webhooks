@@ -1,0 +1,17 @@
+{
+    "apiVersion": "2023-04-25",
+    "requestId": "601c1710034ed6d407996b30",
+    "context": "yourExampleString",
+    "data": {
+        "item": {
+            "address": "0x7495fede000c8a3b77eeae09cf70fa94cd2d53f5",
+            "callbackSecretKey": "yourSecretKey",
+            "callbackUrl": "https://example.com",
+            "createdTimestamp": 1611238648,
+            "eventType": "ADDRESS_TOKENS_TRANSACTION_CONFIRMED",
+            "isActive": true,
+            "receiveCallbackOn": 3,
+            "referenceId": "c748624f-1843-4738-a7de-8258ada0f524"
+        }
+    }
+}

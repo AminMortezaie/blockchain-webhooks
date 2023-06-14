@@ -66,23 +66,17 @@ class TransactionHistory(models.Model):
         db_table = 'transaction_history_{wallet_id}'
 
 
-class ConfirmedTransaction(models.Model):
-    wallet_address = models.CharField(max_length=100)
-    type = models.CharField(max_length=50)
-    transaction_id = models.CharField(max_length=150)
+class RegisteredWallets(models.Model):
+    network = models.ForeignKey(Network, on_delete=models.CASCADE)
+    wallet = models.ForeignKey(Wallet, on_delete=models.CASCADE)
+    reference_id = models.CharField(max_length=250)
+    receive_callback_on = models.CharField(max_length=20)
+    context = models.CharField(max_length=250)
+    callback_url = models.CharField(max_length=250)
+    created_at = models.DateTimeField(auto_now=True)
 
 
-class ConfirmedCoinTransaction(ConfirmedTransaction):
-    coin_amount = models.CharField(max_length=100)
 
-
-class ConfirmedTokenTransaction(ConfirmedTransaction):
-    toke_type = models.CharField(max_length=10)
-    token_name = models.CharField(max_length=100)
-    token_symbol = models.CharField(max_length=10)
-    token_contractAddress: models.CharField(max_length=100)
-    token_amount = models.CharField(max_length=100)
-    decimals = models.CharField(max_length=100)
 
 
 

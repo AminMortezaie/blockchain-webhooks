@@ -4,7 +4,7 @@ from django.conf import settings
 from rest_framework import status
 from trc20webhook.services.utils import get_wallet, get_network
 from trc20webhook.services.network_services import blockchain_networks
-from trc20webhook.models import RegisteredWallets, Network, Wallet
+from trc20webhook.models import RegisteredWallet, Network, Wallet
 
 
 callback_provider_url = 'https://rest.cryptoapis.io'
@@ -59,7 +59,7 @@ def _check_for_registered_wallet(reg_wallet_len: int, network_type: str):
 def check_for_registered_wallet(wallet: Wallet, network: Network):
     context = None
     network_type = network.type
-    reg_wallet_obj = RegisteredWallets.objects.filter(network=network, wallet=wallet)
+    reg_wallet_obj = RegisteredWallet.objects.filter(network=network, wallet=wallet)
     reg_wallet_len = len(reg_wallet_obj)
     if not _check_for_registered_wallet(reg_wallet_len, network_type):
         if network_type == 'WEB3' and reg_wallet_len == 1:
@@ -76,7 +76,7 @@ def create_registered_wallet(response: dict, network_obj: Network, context: str)
     created_at = convert_timestamp(str(response['createdTimestamp']))
 
     try:
-        registered_wallet = RegisteredWallets.objects.create(
+        registered_wallet = RegisteredWallet.objects.create(
             network=network_obj, wallet=get_wallet(wallet_address, network_obj),
             reference_id=reference_id, receive_callback_on=receive_callback_on,
             context=context, callback_url=callback_url, created_at=created_at

@@ -1,6 +1,6 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from trc20webhook.models import TransactionHistory, RegisteredWallets
+from trc20webhook.models import TransactionHistory, RegisteredWallet
 from trc20webhook.serializers import TransactionHistorySerializer, RegisterWalletSerializer
 from trc20webhook.services.get_transaction_payload import generate_transaction
 from trc20webhook.services.register_wallet_service import register_wallet
@@ -18,7 +18,7 @@ class TransactionHistoryView(APIView):
 
 
 class RegisterWalletView(APIView):
-    queryset = RegisteredWallets.objects.all()
+    queryset = RegisteredWallet.objects.all()
     serializer_class = RegisterWalletSerializer
 
     def post(self, request):
@@ -28,7 +28,7 @@ class RegisterWalletView(APIView):
         wallet = serializer_data['wallet']
         network = serializer_data['network']
 
-        status_, message = register_wallet(network=network, wallet=wallet)
+        message, status_ = register_wallet(network=network, wallet=wallet)
         return Response({
             'message': message
         }, status=status_)

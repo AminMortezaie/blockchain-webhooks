@@ -66,7 +66,7 @@ class TransactionHistory(models.Model):
         db_table = 'transaction_history_{wallet_id}'
 
 
-class RegisteredWallets(models.Model):
+class RegisteredWallet(models.Model):
     network = models.ForeignKey(Network, on_delete=models.CASCADE)
     wallet = models.ForeignKey(Wallet, on_delete=models.CASCADE)
     reference_id = models.CharField(max_length=250)

@@ -2,7 +2,6 @@ from rest_framework import generics
 from rest_framework.response import Response
 from trc20webhook import models, serializers
 
-1111
 
 class ReceiveConfirmedCoinTransaction(generics.ListCreateAPIView):
     queryset = models.ConfirmedCoinTransaction.objects.all()

@@ -1,0 +1,29 @@
+{
+    "apiVersion": "2021-03-20",
+    "referenceId": "6038d09050653d1f0e40584c",
+    "idempotencyKey": "e55bf7a4a7188855f1c27541a6c387d04cc3b22ee34d1304b0e6ecad61c9906c",
+    "data": {
+        "product": "BLOCKCHAIN_EVENTS",
+        "event": "ADDRESS_TOKENS_TRANSACTION_CONFIRMED",
+        "item": {
+            "blockchain": "ethereum",
+            "network": "goerli",
+            "address": "0x7495fede000c8a3b77eeae09cf70fa94cd2d53f5",
+            "minedInBlock": {
+                "height": 657915,
+                "hash": "269b0de44db95beddb6aecc520b375ba8f91f3dc5558a24aa4c26979eb00c7e2",
+                "timestamp": 1586365500
+            },
+            "transactionId": "0xbe38781783b1b9d480219255ff98e20335a39e13979a66112efa33f05fde0a33",
+            "tokenType": "ERC-20",
+            "token": {
+                "name": "Tether USD",
+                "symbol": "USDT",
+                "decimals": "6",
+                "amount": "0.00039",
+                "contractAddress": "0xdac17f958d2ee523a2206206994597c13d831ec7"
+            },
+            "direction": "incoming"
+        }
+    }
+}

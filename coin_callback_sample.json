@@ -1,0 +1,23 @@
+{
+    "apiVersion": "2021-03-20",
+    "referenceId": "6038d09050653d1f0e40584c",
+    "idempotencyKey": "e55bf7a4a7188855f1c27541a6c387d04cc3b22ee34d1304b0e6ecad61c9906c",
+    "data": {
+        "product": "BLOCKCHAIN_EVENTS",
+        "event": "ADDRESS_COINS_TRANSACTION_CONFIRMED",
+        "item": {
+            "blockchain": "bitcoin",
+            "network": "testnet",
+            "address": "bc1qmjhy4exylset37e6sfjdtfksm8kpcrxknj7cag",
+            "minedInBlock": {
+                "height": 667861,
+                "hash": "b00d27cccd5e4f4fa1b28824d9a1e5fef88e6c37cdeb09e37eb39aa1d3d63448",
+                "timestamp": 1610365213
+            },
+            "transactionId": "b00d27cccd5e4f4fa1b28824d9a1e5fef88e6c37cdeb09e37eb39aa1d3d63448",
+            "amount": "0.0315",
+            "unit": "BTC",
+            "direction": "incoming"
+        }
+    }
+}

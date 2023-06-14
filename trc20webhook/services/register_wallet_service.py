@@ -4,7 +4,7 @@ from django.conf import settings
 from rest_framework import status
 from trc20webhook.services.utils import get_wallet, get_network
 from trc20webhook.services.network_services import blockchain_networks
-from trc20webhook.models import RegisteredWallets, Network
+from trc20webhook.models import RegisteredWallets, Network, Wallet
 
 
 callback_provider_url = 'https://rest.cryptoapis.io'
@@ -50,10 +50,32 @@ def convert_timestamp(timestamp: str) -> datetime:
     return datetime.date.fromtimestamp(int(timestamp))
 
 
-def check_for_registered_wallet(wallet: str, network: Network):
-    reg_wallet = RegisteredWallets.objects.filter(network=network, wallet=get_wallet(wallet))
-    if len(reg_wallet) == 2:
+def _check_for_registered_wallet(reg_wallet_len: int, network_type: str):
+    if (network_type == "WEB3" and reg_wallet_len == 2) or (network_type != "WEB3" and reg_wallet_len == 1):
         return True
+    return False
+
+
+def check_for_registered_wallet(wallet: Wallet, network: Network):
+    context = None
+    network_type = network.type
+    reg_wallet_obj = RegisteredWallets.objects.filter(network=network, wallet=wallet)
+    reg_wallet_len = len(reg_wallet_obj)
+    if not _check_for_registered_wallet(reg_wallet_len, network_type):
+        if network_type == 'WEB3' and reg_wallet_len == 1:
+            context = reg_wallet_obj.first().context
+        return False, context
+    return True, context
+
+
+def retry_register_wallet(network_obj, context, payload, endpoint):
+    context = 'tokenTX' if context == 'coinTX' else 'coinTX'
+    endpoint = endpoint[context]
+    payload['context'] = context
+    response = get_request_response(endpoint, payload)['data']['item']
+    create_registered_wallet(response, network_obj, context)
+    return response
+
 
 
 def create_registered_wallet(response: dict, network_obj: Network, context: str):
@@ -75,11 +97,20 @@ def create_registered_wallet(response: dict, network_obj: Network, context: str)
 
 
 def register_wallet(network: str, wallet: str):
-    message = None
+    message = 'wallet registered.'
     status_ = status.HTTP_200_OK
 
     network_obj = get_network(network)
-    if network_obj and network_obj.type == 'WEB3':
+
+    if not network_obj:
+        pass
+
+    wallet_obj = get_wallet(wallet, network_obj)
+
+    if not wallet_obj:
+        pass
+
+    if network_obj.type == 'WEB3':
         coin_endpoint = register_wallet_endpoint(network, type='coin')
         token_endpoint = register_wallet_endpoint(network, type='token')
         endpoints = {
@@ -103,17 +134,20 @@ def register_wallet(network: str, wallet: str):
             }
         }
     }
+    check_validation, context_validation = check_for_registered_wallet(wallet_obj, network_obj)
+
     try:
-        for context, endpoint in endpoints.items():
-            payload['context'] = context
-            response = get_request_response(endpoint, payload)['data']['item']
-            create_registered_wallet(response, network_obj, context)
+        if check_validation:
+            for context, endpoint in endpoints.items():
+                payload['context'] = context
+                response = get_request_response(endpoint, payload)['data']['item']
+                create_registered_wallet(response, network_obj, context)
+        elif not check_validation and context_validation:
+            retry_register_wallet(network_obj=network_obj, context=context_validation,
+                                  payload=payload, endpoint=endpoints)
     except Exception as err:
         message = str(err)
         status_ = status.HTTP_417_EXPECTATION_FAILED
-
-    message = 'wallet registered.'
-    status_ = status.HTTP_200_OK
 
     return message, status_
 

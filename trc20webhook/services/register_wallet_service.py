@@ -140,7 +140,8 @@ def register_wallet(network: str, wallet: str):
     check_validation, context_validation = check_for_registered_wallet(wallet_obj, network_obj)
 
     try:
-        if check_validation:
+        if not check_validation:
+            print("Im in check validation...")
             for context, endpoint in endpoints.items():
                 payload['context'] = context
                 _register_wallet(network_obj, context, payload, endpoint)
